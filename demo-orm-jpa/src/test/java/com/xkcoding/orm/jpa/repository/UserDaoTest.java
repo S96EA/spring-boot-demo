@@ -3,9 +3,11 @@ package com.xkcoding.orm.jpa.repository;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.xkcoding.orm.jpa.SpringBootDemoOrmJpaApplication;
 import com.xkcoding.orm.jpa.SpringBootDemoOrmJpaApplicationTests;
 import com.xkcoding.orm.jpa.entity.User;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,6 +32,8 @@ import java.util.stream.Collectors;
 public class UserDaoTest extends SpringBootDemoOrmJpaApplicationTests {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private SpringBootDemoOrmJpaApplication application;
 
     /**
      * 测试保存
@@ -106,6 +110,34 @@ public class UserDaoTest extends SpringBootDemoOrmJpaApplicationTests {
         Assert.assertEquals(5, userPage.getSize());
         Assert.assertEquals(userDao.count(), userPage.getTotalElements());
         log.debug("【id】= {}", userPage.getContent().stream().map(User::getId).collect(Collectors.toList()));
+    }
+
+    @Test
+    public void testFindByName() {
+        final Optional<User> user = userDao.findByName("user_1");
+        Assert.assertTrue(user.isPresent());
+        log.debug("【user】= {}", user.get());
+    }
+
+    @Test
+    public void testUpdateStatusByName() {
+        String userName = "user_1";
+        userDao.updateStatusByName(userName, 0);
+        final var optionalUser = userDao.findByName(userName);
+        Assert.assertTrue(optionalUser.isPresent());
+        Assert.assertEquals(0, (int) optionalUser.get().getStatus());
+        log.debug("【user】= {}", optionalUser.get());
+    }
+
+
+    @Test
+    public void testTransactional() {
+        String userName = "user_1";
+        try {
+            application.updateStatusByName(userName);
+        } catch (Exception e) {
+
+        }
     }
 
     /**
