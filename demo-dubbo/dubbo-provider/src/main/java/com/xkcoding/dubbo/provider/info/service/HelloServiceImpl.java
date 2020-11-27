@@ -1,4 +1,4 @@
-package com.xkcoding.dubbo.provider.service;
+package com.xkcoding.dubbo.provider.info.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.xkcoding.dubbo.common.service.HelloService;

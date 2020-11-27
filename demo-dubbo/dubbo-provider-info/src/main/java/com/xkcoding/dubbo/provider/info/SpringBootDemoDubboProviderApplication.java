@@ -1,4 +1,4 @@
-package com.xkcoding.dubbo.provider;
+package com.xkcoding.dubbo.provider.info;
 
 import com.alibaba.dubbo.spring.boot.annotation.EnableDubboConfiguration;
 import org.springframework.boot.SpringApplication;

@@ -1,4 +1,4 @@
-package com.xkcoding.dubbo.provider;
+package com.xkcoding.dubbo.provider.info;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

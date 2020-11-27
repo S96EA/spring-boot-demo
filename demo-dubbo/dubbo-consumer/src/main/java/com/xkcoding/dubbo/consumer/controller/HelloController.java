@@ -2,6 +2,7 @@ package com.xkcoding.dubbo.consumer.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.xkcoding.dubbo.common.service.HelloService;
+import com.xkcoding.dubbo.common.service.InfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,10 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
     @Reference
     private HelloService helloService;
+    @Reference
+    private InfoService infoService;
 
     @GetMapping("/sayHello")
     public String sayHello(@RequestParam(defaultValue = "xkcoding") String name) {
         log.info("i'm ready to call someone......");
         return helloService.sayHello(name);
+    }
+
+    @GetMapping("/info")
+    public String info(@RequestParam(defaultValue = "xkcoding") String name) {
+        log.info("i'm ready to call someone......");
+        return infoService.getInfo(name);
     }
 }
