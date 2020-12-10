@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -19,8 +20,11 @@ import java.util.Optional;
  */
 @Repository
 public interface UserDao extends JpaRepository<User, Long> {
-    @Query("select u from User u where u.name = ?1")
+    // 按照规范命名 不需要写
+    //    @Query("select u from User u where u.name = ?1")
     Optional<User> findByName(String name);
+
+    List<User> findByStatus(Integer status);
 
     @Transactional
     @Modifying

@@ -120,6 +120,13 @@ public class UserDaoTest extends SpringBootDemoOrmJpaApplicationTests {
     }
 
     @Test
+    public void testFindByStatus() {
+        final List<User> users = userDao.findByStatus(1);
+        Assert.assertTrue(users.size() > 0);
+        users.forEach(user -> log.debug("user = {}", user));
+    }
+
+    @Test
     public void testUpdateStatusByName() {
         String userName = "user_1";
         userDao.updateStatusByName(userName, 0);
