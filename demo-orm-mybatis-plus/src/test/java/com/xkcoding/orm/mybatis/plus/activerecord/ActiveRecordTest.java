@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.xkcoding.orm.mybatis.plus.SpringBootDemoOrmMybatisPlusApplicationTests;
 import com.xkcoding.orm.mybatis.plus.entity.Role;
+import com.xkcoding.orm.mybatis.plus.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +23,9 @@ import java.util.List;
  */
 @Slf4j
 public class ActiveRecordTest extends SpringBootDemoOrmMybatisPlusApplicationTests {
+    @Autowired
+    RoleService roleService;
+
     /**
      * 测试 ActiveRecord 插入数据
      */
@@ -33,15 +39,6 @@ public class ActiveRecordTest extends SpringBootDemoOrmMybatisPlusApplicationTes
     }
 
     /**
-     * 测试 ActiveRecord 更新数据
-     */
-    @Test
-    public void testActiveRecordUpdate() {
-        Assert.assertTrue(new Role().setId(1L).setName("管理员-1").updateById());
-        Assert.assertTrue(new Role().update(new UpdateWrapper<Role>().lambda().set(Role::getName, "普通用户-1").eq(Role::getId, 2)));
-    }
-
-    /**
      * 测试 ActiveRecord 查询数据
      */
     @Test
@@ -52,6 +49,20 @@ public class ActiveRecordTest extends SpringBootDemoOrmMybatisPlusApplicationTes
         List<Role> roles = new Role().selectAll();
         Assert.assertTrue(roles.size() > 0);
         log.debug("【roles】= {}", roles);
+    }
+
+    /**
+     * 测试 ActiveRecord 更新数据
+     */
+    @Test
+    public void testActiveRecordUpdate() {
+        Assert.assertTrue(new Role().setId(1L).setName("管理员-1").updateById());
+        Assert.assertTrue(new Role().update(new UpdateWrapper<Role>().lambda().set(Role::getName, "普通用户-1").eq(Role::getId, 2)));
+    }
+
+    @Test
+    public void testTransaction() {
+        roleService.updateDescription();
     }
 
     /**
