@@ -1,6 +1,7 @@
 package com.xkcoding.codegen.service.impl;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.PageUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
@@ -14,6 +15,7 @@ import com.xkcoding.codegen.utils.DbUtil;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -31,6 +33,7 @@ import java.util.zip.ZipOutputStream;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CodeGenServiceImpl implements CodeGenService {
     private final String TABLE_SQL_TEMPLATE = "select table_name tableName, engine, table_comment tableComment, create_time createTime from information_schema.tables where table_schema = (select database()) %s order by create_time desc";
 
@@ -51,8 +54,10 @@ public class CodeGenServiceImpl implements CodeGenService {
     public PageResult<Entity> listTables(TableRequest request) {
         HikariDataSource dataSource = DbUtil.buildFromTableRequest(request);
         Db db = new Db(dataSource);
+        db.setCaseInsensitive(false);
 
         Page page = new Page(request.getCurrentPage(), request.getPageSize());
+        PageUtil.setFirstPageNo(1);
         int start = page.getStartPosition();
         int pageSize = page.getPageSize();
 
@@ -70,10 +75,11 @@ public class CodeGenServiceImpl implements CodeGenService {
             count = (BigDecimal) db.queryNumber(countSql, request.getTableName());
         } else {
             query = db.query(sql + PAGE_SQL_TEMPLATE, start, pageSize);
+            log.info("query: {}, {}, {}", sql + PAGE_SQL_TEMPLATE, start, pageSize);
             count = (BigDecimal) db.queryNumber(countSql);
         }
-
         PageResult<Entity> pageResult = new PageResult<>(count.longValue(), page.getPageNumber(), page.getPageSize(), query);
+        log.info("result: {}", pageResult);
 
         dataSource.close();
         return pageResult;

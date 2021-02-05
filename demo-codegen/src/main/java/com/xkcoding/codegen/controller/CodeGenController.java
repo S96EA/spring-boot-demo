@@ -1,6 +1,7 @@
 package com.xkcoding.codegen.controller;
 
 import cn.hutool.core.io.IoUtil;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.xkcoding.codegen.common.R;
 import com.xkcoding.codegen.entity.GenConfig;
 import com.xkcoding.codegen.entity.TableRequest;
